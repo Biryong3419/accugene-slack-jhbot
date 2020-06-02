@@ -8,6 +8,7 @@ from cassandra.query import SimpleStatement
 IP_LIMS = '192.168.10.2'
 PASSWORD = 'accugene1027!'
 KEYSPACE_LIMS = 'acculims_new'
+BOT_TOKEN = 'xoxb-881439828018-1005189227298-i728Qw1sLM1XXZxXyPQqvu0H'
 ap = PlainTextAuthProvider(username='accugene', password=PASSWORD)
 
 def find_barcode_by_samid(sam):
@@ -124,7 +125,7 @@ def say_hello(**payload):
         else:
             runid = '_'.join(data.get('text', []).split('_')[1:])
             path = os.path.join('/data/lims/device/MiSeqDx01',runid)
-            return_message='====='+runid+' 샘플 리스트====='
+            return_message='====='+runid+' 샘플 리스트(sample id, name)====='
             web_client.chat_postMessage(
                 channel=channel_id,
                 text=return_message,
@@ -159,7 +160,7 @@ def say_hello(**payload):
                         post_msg = ''
                         if msg:
                             post_msg=' 비고=>'+msg
-                        return_message=str(count)+'. SampleID=>'+samid+' Name=>'+barcode+post_msg
+                        return_message=str(count)+'. '+samid+', '+barcode+post_msg
                         web_client.chat_postMessage(
                         channel=channel_id,
                         text=return_message,
@@ -219,7 +220,7 @@ while True:
         
         if err_count==10:
             break
-        slack_token = os.environ["SLACK_BOT_TOKEN"]
+        slack_token = BOT_TOKEN
         rtm_client = slack.RTMClient(token=slack_token)
         rtm_client.start()
     except Exception as ex:
